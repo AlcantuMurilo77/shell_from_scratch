@@ -12,7 +12,7 @@
 #define RED "\033[1;31m"
 #define RST "\033[0m"
 
-#define p(...) printf(__VA_ARGS__) //this defines a shortcut, now printf will be called with p
+#define p(...) printf(__VA_ARGS__) 
 
-
+void *Getcwd(char *buf, size_t size);
 #endif
