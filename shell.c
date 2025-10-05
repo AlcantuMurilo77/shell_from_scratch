@@ -9,6 +9,21 @@ t_builtin g_builtin[] = {
     {.builtin_name=NULL}
 };
 
+int status = 0;
+
+
+void shell_launch(char **args){
+
+
+    if (Fork() == SHELL_CHILD){
+        Execvp(args[0], args);
+    } else{
+        Wait(&status);
+    }
+
+
+}
+
 void shell_exec(char **args){
     
     int i;
@@ -19,23 +34,21 @@ void shell_exec(char **args){
     while((curr = g_builtin[i].builtin_name)){
 
         if (!strcmp(curr, args[0])){
-            g_builtin[i].foo(args);
+            status = g_builtin[i].foo(args);
             return;
         }
         i++;
     }
 
-    //shell_launch(args); //fork->exec
+    shell_launch(args); 
 
 }
-
 
 char *shell_read_line(void){
     char *buf;
     size_t bufsize;  
     char cwd[BUFSIZ];    
 
-    free(buf);
     buf = NULL;
 
     Getcwd(cwd, sizeof(cwd));
@@ -78,23 +91,16 @@ char **shell_split_line(char *line){
         }
 
     }
-    tokens[position] == NULL;
+    tokens[position] = NULL;
 
     return tokens;
 
 }
 
-
-
-
-
 int main(int ac, char **av){
-    //Now we have to implement a REPL
-    // READ->EVALUATE->PRINT/EXECUTE->LOOP
 
     char *line;
     char **args;
-
 
     while(line = shell_read_line()){                
         
@@ -103,8 +109,8 @@ int main(int ac, char **av){
 
         shell_exec(args);
 
-        free(line);
         free(args);
+        free(line);
     }
 
     return EXIT_SUCCESS;
