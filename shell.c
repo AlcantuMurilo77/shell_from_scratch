@@ -28,19 +28,54 @@ char *shell_read_line(void){
 
     return buf;
 } 
+
+char **shell_split_line(char *line){
+
+    char **tokens;
+    unsigned int position;
+    size_t bufsize;
+
+    bufsize = BUFSIZ;
+    tokens = Malloc(bufsize * sizeof(*tokens));
+    position = 0;
+
+    for (char *token = strtok(line, DEL); token; token = strtok(NULL, DEL)){
+        tokens[position++] = token;
+        if (position >= bufsize){
+
+            bufsize *= 2;
+            tokens = Realloc(tokens, bufsize * sizeof(*tokens));
+
+
+        }
+
+    }
+    tokens[position] == NULL;
+
+    return tokens;
+
+}
+
+
+
+
+
 int main(int ac, char **av){
     //Now we have to implement a REPL
     // READ->EVALUATE->PRINT/EXECUTE->LOOP
 
     char *line;
+    char **args;
 
-    while(0xCE77){        // 1) get line
-        // 2) get tokens (we gonna use the function gettok but ideally we should use lexing->parsing to evaluate)
-        // 3) execute
 
-        line = shell_read_line(); //TODO: Implement this function
+    while(line = shell_read_line()){                
+        
+        args = shell_split_line(line);
 
-        p("%s\n", line ? line : "((null))");p("%s\n", line);
+        for(int i =0; args[i]; i++){
+            p("%s\n", args[i]);
+        }
+
     }
 
         return EXIT_SUCCESS;
