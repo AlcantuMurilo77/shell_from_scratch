@@ -15,6 +15,15 @@
 
 #define p(...) printf(__VA_ARGS__) 
 #define DEL "\n\t \v\f\r"
+
+typedef struct c_builtin{
+
+    const char *builtin_name;
+    void (*foo)(char **args);
+} t_builtin;
+
+
+void shell_exit(char **args);
 void *Getcwd(char *buf, size_t size);
 void *Malloc(size_t size);
 void *Realloc(void *ptr, size_t size);

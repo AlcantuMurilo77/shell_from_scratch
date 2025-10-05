@@ -1,13 +1,41 @@
 #include "shell.h"
 #include <stdio.h>
 
+t_builtin g_builtin[] = {
+
+    // {.builtin_name="echo", .foo="shell_echo"},
+    // {.builtin_name= "env", .foo="shell_echo"},
+    {.builtin_name="exit", .foo=shell_exit}, 
+    {.builtin_name=NULL}
+};
+
+void shell_exec(char **args){
+    
+    int i;
+    const char *curr;
+
+    i = 0;
+
+    while((curr = g_builtin[i].builtin_name)){
+
+        if (!strcmp(curr, args[0])){
+            g_builtin[i].foo(args);
+            return;
+        }
+        i++;
+    }
+
+    //shell_launch(args); //fork->exec
+
+}
+
 
 char *shell_read_line(void){
     char *buf;
     size_t bufsize;  
     char cwd[BUFSIZ];    
 
-
+    free(buf);
     buf = NULL;
 
     Getcwd(cwd, sizeof(cwd));
@@ -72,11 +100,12 @@ int main(int ac, char **av){
         
         args = shell_split_line(line);
 
-        for(int i =0; args[i]; i++){
-            p("%s\n", args[i]);
-        }
 
+        shell_exec(args);
+
+        free(line);
+        free(args);
     }
 
-        return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
